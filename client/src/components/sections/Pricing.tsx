@@ -52,7 +52,7 @@ const pricingPlans = [
 
 const Pricing = forwardRef<HTMLDivElement>((_, ref) => {
   return (
-    <div ref={ref} className="pt-40">
+    <div ref={ref} className="py-40">
       <h3 className="text-4xl font-bold text-center">
         Simple{" "}
         <span
