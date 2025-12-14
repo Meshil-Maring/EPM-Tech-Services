@@ -1,6 +1,7 @@
+import { forwardRef } from "react";
 import { Toaster, toast } from "react-hot-toast";
 
-const InTouch = () => {
+const InTouch = forwardRef<HTMLDivElement>((_, ref) => {
   // Form Hanlder
   const formHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,12 +54,15 @@ const InTouch = () => {
   };
 
   return (
-    <section className="relative mt-40 overflow-hidden bg-slate-950 p-4">
+    <section
+      ref={ref}
+      className="relative pt-40 overflow-hidden bg-slate-950 p-4"
+    >
       {/* Toast */}
       <Toaster position="bottom-center" />
 
       {/* Heading */}
-      <h3 className="mt-8 text-center text-4xl font-bold">
+      <h3 className="text-center text-4xl font-bold">
         Get{" "}
         <span
           style={{
@@ -209,6 +213,6 @@ const InTouch = () => {
       </div>
     </section>
   );
-};
+});
 
 export default InTouch;

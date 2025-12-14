@@ -60,25 +60,6 @@ const BackgroundDesign = () => {
 
       <motion.div
         className="
-      absolute top-[3400px] left-[40%]
-      h-[600px] w-[200px]
-      bg-linear-to-b from-blue-600/20 to-purple-700/20
-      blur-[130px] rounded-full
-      z-0
-    "
-        animate={{
-          y: [0, -80, 0],
-          opacity: [0.25, 0.5, 0.25],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-
-      <motion.div
-        className="
       absolute top-10/12 right-[150px]
       h-[550px] w-[550px] rounded-full
       bg-blue-400/10 blur-[190px]

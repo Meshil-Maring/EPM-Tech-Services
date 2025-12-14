@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import PricingCart from "../modules/PricingCart";
 
 const pricingPlans = [
@@ -49,9 +50,9 @@ const pricingPlans = [
   },
 ];
 
-const Pricing = () => {
+const Pricing = forwardRef<HTMLDivElement>((_, ref) => {
   return (
-    <div className="mt-40">
+    <div ref={ref} className="pt-40">
       <h3 className="text-4xl font-bold text-center">
         Simple{" "}
         <span
@@ -75,6 +76,6 @@ const Pricing = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Pricing;

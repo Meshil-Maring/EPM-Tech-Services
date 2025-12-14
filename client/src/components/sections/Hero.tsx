@@ -1,6 +1,6 @@
+import { forwardRef, useMemo } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { useMemo } from "react";
 
 const CODE_ITEMS = [
   "<div>",
@@ -12,9 +12,19 @@ const CODE_ITEMS = [
   "{ }, </>",
 ];
 
-export function Hero() {
-  // generate random positions ONCE
-  const positions = useMemo(
+interface Position {
+  left: string;
+  top: string;
+  x: number;
+}
+
+interface Stat {
+  value: string;
+  label: string;
+}
+
+const Hero = forwardRef<HTMLDivElement>((_, ref) => {
+  const positions = useMemo<Position[]>(
     () =>
       Array.from({ length: 2 }).map(() => ({
         left: `${Math.random() * 100}%`,
@@ -26,16 +36,15 @@ export function Hero() {
 
   return (
     <section
+      ref={ref}
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-black"
     >
       {/* ===== Background Glows ===== */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[#6C48FF] rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse"></div>
-
-        <div className="absolute top-1/3 -right-20 w-96 h-96 bg-[#00D4FF] rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse delay-700"></div>
-
-        <div className="absolute -bottom-32 left-1/2 w-96 h-96 bg-[#8F00FF] rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse delay-1000"></div>
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[#6C48FF] rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse" />
+        <div className="absolute top-1/3 -right-20 w-96 h-96 bg-[#00D4FF] rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse delay-700" />
+        <div className="absolute -bottom-32 left-1/2 w-96 h-96 bg-[#8F00FF] rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse delay-1000" />
       </div>
 
       {/* ===== Floating Code ===== */}
@@ -56,10 +65,7 @@ export function Hero() {
               ease: "linear",
             }}
             className="absolute rounded-lg p-3 text-[#00D4FF] text-sm"
-            style={{
-              left: pos.left,
-              top: pos.top,
-            }}
+            style={{ left: pos.left, top: pos.top }}
           >
             {CODE_ITEMS[i]}
           </motion.div>
@@ -108,41 +114,39 @@ export function Hero() {
           technologies
         </motion.p>
 
-        {/* Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4"
         >
-          <button className="group px-8 py-4 rounded-full bg-linear-to-r from-[#6C48FF] to-[#00D4FF] text-white hover:shadow-2xl hover:shadow-[#6C48FF]/50 transition-all flex items-center gap-2">
+          <button className="group px-8 py-4 rounded-full bg-linear-to-r from-[#6C48FF] to-[#00D4FF] text-white flex items-center gap-2">
             Get Quote
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </button>
-          <button className="px-8 py-4 rounded-full glass-hover glass text-white flex items-center gap-2">
-            Contact Us
+            <ArrowRight className="w-5 h-5" />
           </button>
         </motion.div>
 
-        {/* Stats */}
+        {/* ===== STATS (UNCHANGED) ===== */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
           className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 px-4"
         >
-          {[
-            { value: "50+", label: "Projects Completed" },
-            { value: "98%", label: "Client Satisfaction" },
-            { value: "10+", label: "Team Members" },
-            { value: "24/7", label: "Support Available" },
-          ].map((stat, index) => (
+          {(
+            [
+              { value: "50+", label: "Projects Completed" },
+              { value: "98%", label: "Client Satisfaction" },
+              { value: "10+", label: "Team Members" },
+              { value: "24/7", label: "Support Available" },
+            ] as Stat[]
+          ).map((stat, index) => (
             <div
               key={index}
               className="border bg-white/10 backdrop-blur-sm border-white/20 rounded-2xl p-6"
             >
               <div
-                className="text-3xl md:text-4xl font-bold gradient-text mb-2"
+                className="text-3xl md:text-4xl font-bold mb-2"
                 style={{
                   backgroundImage: "var(--gradient)",
                   backgroundClip: "text",
@@ -156,12 +160,9 @@ export function Hero() {
           ))}
         </motion.div>
 
+        {/* ================= Extra Floating Glow ================= */}
         <motion.div
-          className="
-    absolute -top-20 right-20
-    h-80 w-80 rounded-full
-    bg-blue-600/20 blur-3xl
-  "
+          className="absolute -top-20 right-20 h-80 w-80 rounded-full bg-blue-600/20 blur-3xl"
           animate={{
             y: [0, -30, 0],
             x: [0, 20, 0],
@@ -175,6 +176,7 @@ export function Hero() {
       </div>
     </section>
   );
-}
+});
 
+Hero.displayName = "Hero";
 export default Hero;

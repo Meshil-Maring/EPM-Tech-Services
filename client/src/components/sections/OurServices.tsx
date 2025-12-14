@@ -1,8 +1,9 @@
+import { forwardRef } from "react";
 import Cart from "../modules/Cart";
 
-const ChooseUs = () => {
+const ChooseUs = forwardRef<HTMLDivElement>((_, ref) => {
   return (
-    <div className="mt-20 px-8">
+    <div ref={ref} className="pt-20 px-8">
       <h2 className="text-4xl font-bold text-center">
         Our{" "}
         <span
@@ -47,6 +48,6 @@ const ChooseUs = () => {
       </div>
     </div>
   );
-};
+});
 
 export default ChooseUs;
