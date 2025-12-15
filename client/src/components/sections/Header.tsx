@@ -25,6 +25,10 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
     setOpenNav(false);
   };
 
+  const authHandler = () => {
+    console.log("Hello");
+  };
+
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-white/10 backdrop-blur-xl border-b border-white/10 px-6 py-3 flex justify-between items-center">
       {/* Logo */}
@@ -65,16 +69,23 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
             exit={{ opacity: 0, y: -20 }}
             className="absolute top-16 left-0 w-full bg-black px-8 py-10"
           >
-            <ul className="flex flex-col items-end space-y-5">
+            <ul className="flex flex-col items-center space-y-5">
               {navItems.map((item, i) => (
                 <li
                   key={i}
                   onClick={() => handleClick(item.action)}
-                  className="text-xl text-white cursor-pointer"
+                  className="text-xl text-center w-full text-white cursor-pointer"
                 >
                   {item.label}
                 </li>
               ))}
+
+              <button
+                onClick={authHandler}
+                className="bg-blue-600 p-3 w-48 rounded-full"
+              >
+                Login
+              </button>
             </ul>
           </motion.nav>
         )}
