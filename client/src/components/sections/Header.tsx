@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { DynamicIcon } from "lucide-react/dynamic";
 import Logo from "../../assets/EMP_logo.png";
 
@@ -20,13 +21,16 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
     { label: "Contact", action: onContact },
   ];
 
+  // Routes
+  const navigate = useNavigate();
+
   const handleClick = (action: () => void) => {
     action();
     setOpenNav(false);
   };
 
   const authHandler = () => {
-    console.log("Hello");
+    navigate("/sign-up");
   };
 
   return (
@@ -40,7 +44,7 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
       </div>
 
       {/* Desktop Menu */}
-      <ul className="hidden sm:flex gap-6 text-white">
+      <ul className="hidden sm:flex gap-6 text-white items-center">
         {navItems.map((item, i) => (
           <li
             key={i}
@@ -50,6 +54,13 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
             {item.label}
           </li>
         ))}
+
+        <button
+          onClick={authHandler}
+          className="bg-blue-600 p-2 px-6 rounded-full"
+        >
+          Sign up
+        </button>
       </ul>
 
       {/* Mobile Button */}
@@ -84,7 +95,7 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
                 onClick={authHandler}
                 className="bg-blue-600 p-3 w-48 rounded-full"
               >
-                Login
+                Sign up
               </button>
             </ul>
           </motion.nav>
