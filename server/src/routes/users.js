@@ -1,35 +1,10 @@
 import express from "express";
-import sql from "../config/db.js";
-import bcrypt from "bcrypt";
+import { createUser } from "../controller/create-user.js";
+import { login } from "../controller/login.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-  const { userName, email, password } = req.body;
-
-  try {
-    // hash password
-    const saltedPassword = await bcrypt.hash(password, 12);
-
-    // insert user
-    await sql`
-      INSERT INTO users (name, email, password)
-      VALUES (${userName}, ${email}, ${saltedPassword})
-    `;
-
-    res.status(201).json({ message: "Account created successfully" });
-  } catch (err) {
-    // UNIQUE email error
-    if (err.code === "23505") {
-      return res.status(409).json({
-        error: "Email already exists",
-        status: 409,
-      });
-    }
-
-    console.error(err);
-    res.status(500).json({ error: "Something went wrong" });
-  }
-});
+router.post("/sign-up", createUser);
+router.post("/log-in", login);
 
 export default router;
