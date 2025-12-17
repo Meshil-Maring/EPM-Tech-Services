@@ -1,8 +1,10 @@
-import postgres from "postgres";
+import { Pool } from "pg";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const sql = postgres(process.env.DATABASE_URL);
+const db = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
-export default sql;
+export default db;
