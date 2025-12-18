@@ -2,10 +2,13 @@ import express from "express";
 import cors from "cors";
 import session from "express-session";
 import dotenv from "dotenv";
+import Razorpay from "razorpay";
 
 import { isAuth } from "./src/middleware/isAuth.js";
 import usersRoute from "./src/routes/users.js";
 import { intouchSendEmail } from "./src/controller/intouch-send-email.js";
+import sessionConfig from "./src/config/session.js";
+import paymentRoutes from "./src/routes/payment.routes.js";
 
 dotenv.config();
 
@@ -24,25 +27,14 @@ app.use(express.json());
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; connect-src 'self' http://localhost:5000 http://localhost:5173"
+    `default-src 'self'; connect-src 'self' http://localhost:5000 http://localhost:5173`
   );
 
   next();
 });
 
-app.use(
-  session({
-    name: "session-id",
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-      maxAge: 1000 * 60 * 60,
-    },
-  })
-);
+// Session config
+app.use(session(sessionConfig));
 
 app.use("/auth", usersRoute);
 
@@ -53,5 +45,8 @@ app.get("/home", isAuth, (req, res) => {
 
 // Public route
 app.post("/send", intouchSendEmail);
+
+//
+app.use("/api/payment", paymentRoutes);
 
 app.listen(PORT, () => console.log("Server running on", PORT));

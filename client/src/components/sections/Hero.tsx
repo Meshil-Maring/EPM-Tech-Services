@@ -1,6 +1,7 @@
 import { forwardRef, useMemo } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
+import PayButton from "../modules/PayButton";
 
 const CODE_ITEMS = [
   "<div>",
@@ -174,6 +175,8 @@ const Hero = forwardRef<HTMLDivElement>((_, ref) => {
           }}
         />
       </div>
+
+      <PayButton />
     </section>
   );
 });

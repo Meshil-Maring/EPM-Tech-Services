@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { Link } from "react-router-dom";
+
+import { server_url } from "../../utils/url";
 import { DynamicIcon } from "lucide-react/dynamic";
 import Logo from "../../assets/EMP_logo.png";
 
@@ -13,6 +17,20 @@ interface HeaderProps {
 
 const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
   const [openNav, setOpenNav] = useState(false);
+  const [isAuth, setIsAuth] = useState<boolean>(false);
+
+  // use Effect
+  useEffect(() => {
+    const auth = async () => {
+      const res = await fetch(`${server_url}/home`, {
+        credentials: "include",
+      });
+
+      if (res.status == 443) setIsAuth(true);
+    };
+
+    auth();
+  }, []);
 
   const navItems = [
     { label: "Home", action: onHome },
@@ -29,8 +47,29 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
     setOpenNav(false);
   };
 
-  const authHandler = () => {
+  // Sign up handler
+  const sigupHandler = () => {
     navigate("/sign-up");
+  };
+
+  // Log out handler
+  const logOutHandler = async () => {
+    const res = await fetch(`${server_url}/auth/log-out`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+
+    if (res.status == 200) {
+      const data = await res.json();
+      toast.success(data.message);
+    }
+
+    setIsAuth(false);
+
+    navigate("/");
   };
 
   return (
@@ -55,11 +94,15 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
           </li>
         ))}
 
+        {isAuth && <Link to={"/transaction"}>Transaction</Link>}
+
         <button
-          onClick={authHandler}
-          className="bg-blue-600 p-2 px-6 rounded-full"
+          onClick={isAuth ? logOutHandler : sigupHandler}
+          className={` ${
+            isAuth ? "bg-red-700" : "bg-blue-500"
+          } py-2 p-4 rounded-full`}
         >
-          Sign up
+          {isAuth ? "Log out" : "Sign up"}
         </button>
       </ul>
 
@@ -78,7 +121,7 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-16 left-0 w-full bg-black px-8 py-10"
+            className="absolute flex flex-col gap-8 top-16 left-0 w-full bg-black px-8 py-10 justify-center items-center"
           >
             <ul className="flex flex-col items-center space-y-5">
               {navItems.map((item, i) => (
@@ -90,14 +133,20 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
                   {item.label}
                 </li>
               ))}
-
-              <button
-                onClick={authHandler}
-                className="bg-blue-600 p-3 w-48 rounded-full"
-              >
-                Sign up
-              </button>
             </ul>
+
+            <ul>
+              <Link to={"/transaction"}>Transaction</Link>
+            </ul>
+
+            <button
+              onClick={isAuth ? logOutHandler : sigupHandler}
+              className={` ${
+                isAuth ? "bg-red-700" : "bg-blue-500"
+              } p-3 w-48 rounded-full `}
+            >
+              {isAuth ? "Log out" : "Sign up"}
+            </button>
           </motion.nav>
         )}
       </AnimatePresence>

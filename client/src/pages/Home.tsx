@@ -1,14 +1,14 @@
 import { useRef } from "react";
 
-import BackgroundDesign from "../../components/modules/BackgroundDesign";
-import Header from "../../components/sections/Header";
-import Hero from "../../components/sections/Hero";
-import OurServices from "../../components/sections/OurServices";
-import ChooseUs from "../../components/sections/ChooseUs";
-import ClientSay from "../../components/sections/ClientSay";
-import Pricing from "../../components/sections/Pricing";
-import InTouch from "../../components/sections/InTouch";
-import Footer from "../../components/sections/Footer";
+import BackgroundDesign from "../components/modules/BackgroundDesign";
+import Header from "../components/sections/Header";
+import Hero from "../components/sections/Hero";
+import OurServices from "../components/sections/OurServices";
+import ChooseUs from "../components/sections/ChooseUs";
+import ClientSay from "../components/sections/ClientSay";
+import Pricing from "../components/sections/Pricing";
+import InTouch from "../components/sections/InTouch";
+import Footer from "../components/sections/Footer";
 
 const Home = () => {
   const homeRef = useRef<HTMLDivElement>(null);

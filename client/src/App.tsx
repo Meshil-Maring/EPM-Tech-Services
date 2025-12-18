@@ -1,7 +1,8 @@
 import { Route, Routes } from "react-router-dom";
-import Home from "./components/pages/Home";
-import Signup from "./components/pages/Signup";
-import Login from "./components/pages/Login";
+import Home from "./pages/Home";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import Transaction from "./pages/Transaction";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Route path="/" element={<Home />}></Route>
       <Route path="/sign-up" element={<Signup />}></Route>
       <Route path="/log-in" element={<Login />}></Route>
+      <Route path="/transaction" element={<Transaction />}></Route>
     </Routes>
   );
 }
