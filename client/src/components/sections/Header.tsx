@@ -94,6 +94,8 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
           </li>
         ))}
 
+        {isAuth && <Link to={"/transaction"}>Transaction</Link>}
+
         <button
           onClick={isAuth ? logOutHandler : sigupHandler}
           className={` ${
@@ -134,7 +136,7 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
             </ul>
 
             <ul>
-              <Link to={"/transaction"}>My transaction</Link>
+              <Link to={"/transaction"}>Transaction</Link>
             </ul>
 
             <button
