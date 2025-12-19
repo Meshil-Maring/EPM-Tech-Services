@@ -89,9 +89,9 @@ const Login = () => {
         </Link>
 
         <div>
-          <h1 className="text-2xl font-bold text-center">Create Account</h1>
+          <h1 className="text-2xl font-bold text-center">Log In</h1>
           <label className="text-center w-full text-black/80 inline-block">
-            Sign up to access all features
+            Log in to continue to your account
           </label>
         </div>
 
