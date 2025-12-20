@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import PricingCart from "../modules/PricingCart";
+import PaymentLayout from "../modules/PaymentLayout";
 
 const pricingPlans = [
   {
@@ -74,6 +75,8 @@ const Pricing = forwardRef<HTMLDivElement>((_, ref) => {
       <div className="mt-4 p-8 grid items-center justify-center gap-12 lg:grid-cols-3 max-w-[1200px] self-center justify-self-center">
         <PricingCart plans={pricingPlans} />
       </div>
+
+      <PaymentLayout />
     </div>
   );
 });
