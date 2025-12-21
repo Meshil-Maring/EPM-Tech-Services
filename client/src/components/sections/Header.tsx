@@ -135,7 +135,7 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
               ))}
             </ul>
 
-            <ul>
+            <ul className="text-xl">
               <Link to={"/transaction"}>Transaction</Link>
             </ul>
 
