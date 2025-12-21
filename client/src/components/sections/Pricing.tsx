@@ -1,12 +1,13 @@
-import { forwardRef } from "react";
-import PricingCart from "../modules/PricingCart";
-import PaymentLayout from "../modules/PaymentLayout";
+import { useState, forwardRef } from "react";
+import PricingCart from "../modules/PricingCart.tsx";
+import PaymentLayout from "../modules/PaymentLayout.tsx";
 
+// Pricing data
 const pricingPlans = [
   {
     title: "Starter",
     description: "Perfect for small businesses and startups",
-    price: "10,000",
+    amount: 10000,
     list: [
       "Responsive Website (5 pages)",
       "Mobile Optimized",
@@ -16,11 +17,10 @@ const pricingPlans = [
       "SSL Certificate",
     ],
   },
-
   {
     title: "Professional",
-    description: "Deal for growing businesses",
-    price: "25,000",
+    description: "Ideal for growing businesses",
+    amount: 25000,
     popular: true,
     list: [
       "Custom Web Application",
@@ -33,14 +33,13 @@ const pricingPlans = [
       "API Development",
     ],
   },
-
   {
     title: "Enterprise",
     description: "For large-scale applications",
-    price: "Custom",
+    amount: 0,
     list: [
       "Full-Stack Development",
-      "Custom Sotware Solution",
+      "Custom Software Solution",
       "Cloud Infrastructure",
       "Advanced Security",
       "Regular Maintenance",
@@ -52,31 +51,36 @@ const pricingPlans = [
 ];
 
 const Pricing = forwardRef<HTMLDivElement>((_, ref) => {
+  const [overlayOpen, setOverlayOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(0);
+
+  const openOverlay = (index: number) => {
+    setSelectedPlan(index);
+    setOverlayOpen(true);
+  };
+
+  const closeOverlay = () => setOverlayOpen(false);
+
   return (
     <div ref={ref} className="py-40">
       <h3 className="text-4xl font-bold text-center">
-        Simple{" "}
-        <span
-          style={{
-            backgroundImage: "var(--gradient)",
-            WebkitBackgroundClip: "text",
-            color: "transparent",
-          }}
-        >
-          Pricing
-        </span>
+        Simple <span className="text-blue-400">Pricing</span>
       </h3>
 
-      <p className="text-white/50 text-center p-4 max-w-3/4 self-center justify-self-center">
-        Choose the perfect plan for your project. All plans include our
-        commitment to quality and excellence.
+      <p className="text-white/50 text-center p-4 max-w-2xl mx-auto">
+        Choose the perfect plan for your project.
       </p>
 
-      <div className="mt-4 p-8 grid items-center justify-center gap-12 lg:grid-cols-3 max-w-[1200px] self-center justify-self-center">
-        <PricingCart plans={pricingPlans} />
+      <div className="mt-10 grid gap-10 lg:grid-cols-3 max-w-[1200px] mx-auto px-6">
+        <PricingCart plans={pricingPlans} onSelect={openOverlay} />
       </div>
 
-      <PaymentLayout />
+      {overlayOpen && (
+        <PaymentLayout
+          onClose={closeOverlay}
+          data={pricingPlans[selectedPlan]}
+        />
+      )}
     </div>
   );
 });

@@ -1,67 +1,66 @@
 import { DynamicIcon } from "lucide-react/dynamic";
 
-const PricingCart = ({ plans }: { plans: Array<any> }) => {
-  {
-    return plans.map((items, key) => (
-      <div
-        key={key}
-        className={`${
-          items.popular ? "border-blue-500 border-4" : "border-white/20"
-        } flex w-fit flex-col bg-white/10 p-4 rounded-2xl border md:p-8 } relative w-full`}
-      >
-        {items.popular && (
-          <div
-            className="absolute -top-[22px] self-center flex gap-2 p-2 rounded-full justify-center items-center"
-            style={{
-              backgroundImage: "var(--gradient)",
-            }}
-          >
-            <DynamicIcon name="zap" size={18} />
-            <p>Most Popular</p>
-          </div>
-        )}
+type Plan = {
+  title: string;
+  description: string;
+  amount: number;
+  popular?: boolean;
+  list: string[];
+};
 
-        <h4 className="font-bold text-4xl text-(--color-grandient)">
-          {items.title}
-        </h4>
-        <p className="text-white/40">{items.description}</p>
-
-        <p>
-          ₹{" "}
-          <span
-            className="text-2xl font-extrabold"
-            style={{
-              backgroundImage: "var(--gradient)",
-              WebkitBackgroundClip: "text",
-              color: "transparent",
-            }}
-          >
-            {items.price}{" "}
-          </span>
-          /project
-        </p>
-
-        <ul className="flex flex-col gap-1 mt-8">
-          {items.list.map((list: string, key: number) => (
-            <li key={key} className="flex gap-4">
-              <span className="bg-blue-800 inline-block rounded-full p-1 self-start">
-                <DynamicIcon name="check" size={18} />
-              </span>
-              {list}
-            </li>
-          ))}
-        </ul>
-
-        <button
-          className={`${
-            items.popular ? "bg-blue-500" : "bg-blue-500/10"
-          } p-2 mt-8 rounded-full cursor-pointer`}
+const PricingCart = ({
+  plans,
+  onSelect,
+}: {
+  plans: Plan[];
+  onSelect: (index: number) => void;
+}) => {
+  return (
+    <>
+      {plans.map((plan, index) => (
+        <div
+          key={index}
+          className={`relative flex flex-col rounded-2xl border p-6 bg-white/10 ${
+            plan.popular ? "border-blue-500 border-4" : "border-white/20"
+          }`}
         >
-          Get Started
-        </button>
-      </div>
-    ));
-  }
+          {plan.popular && (
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-500 px-4 py-1 rounded-full text-sm flex gap-2">
+              <DynamicIcon name="zap" size={16} />
+              Most Popular
+            </div>
+          )}
+
+          <h4 className="text-3xl font-bold">{plan.title}</h4>
+          <p className="text-white/50 mt-1">{plan.description}</p>
+
+          <p className="mt-4">
+            ₹{" "}
+            <span className="text-2xl font-bold text-blue-400">
+              {plan.amount === 0 ? "Custom" : plan.amount}
+            </span>
+            /project
+          </p>
+
+          <ul className="mt-6 flex flex-col gap-2">
+            {plan.list.map((item, i) => (
+              <li key={i} className="flex gap-3">
+                <DynamicIcon name="check" size={18} />
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <button
+            onClick={() => onSelect(index)}
+            className="mt-6 bg-blue-500 hover:bg-blue-600 transition p-2 rounded-full"
+          >
+            Get Started
+          </button>
+        </div>
+      ))}
+    </>
+  );
 };
 
 export default PricingCart;

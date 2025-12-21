@@ -1,7 +1,26 @@
 import { DynamicIcon } from "lucide-react/dynamic";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import PayButton from "./PayButton";
 
-const PaymentLayout = () => {
+type PaymentLayoutProps = {
+  onClose: () => void;
+  data: {
+    title: string;
+    amount: number;
+    description: string;
+  };
+};
+
+const PaymentLayout = ({ onClose, data }: PaymentLayoutProps) => {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+
+  const isValid =
+    form.name.length > 2 && form.email.includes("@") && form.phone.length >= 10;
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -10,69 +29,50 @@ const PaymentLayout = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-xl z-100 flex items-center justify-center p-4 sm:p-8">
-      {/* Card */}
-      <div className="w-full max-w-md bg-black/80 border border-white/30 rounded-2xl p-5 sm:p-8 max-h-[90vh] no-scrollbar relative">
-        {/* Close button */}
-        <button className="absolute top-2 right-2 bg-white/20 p-2 rounded-full">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-black/80 border border-white/30 rounded-2xl p-6 relative">
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 bg-white/20 p-2 rounded-full"
+        >
           <DynamicIcon name="x" size={18} />
         </button>
 
-        {/* Header */}
-        <div className="mt-6 mb-4 text-center">
-          <h1 className="text-xl sm:text-2xl font-bold">Secure Payment</h1>
-          <p className="text-white/70 text-sm sm:text-base">
-            Complete your purchase for Professional Plan
-          </p>
+        <h2 className="text-xl font-bold text-center">Secure Payment</h2>
+        <p className="text-white/60 text-center mb-4">{data.title} Plan</p>
+
+        <div className="bg-white/10 p-4 rounded-xl text-sm">
+          <div className="flex justify-between">
+            <span>Amount</span>
+            <span>₹ {data.amount}</span>
+          </div>
+          <p className="text-white/60 mt-2">{data.description}</p>
         </div>
 
-        <div className="overflow-y-auto max-h-[60vh] no-scrollbar">
-          {/* Plan info */}
-          <div className="grid grid-cols-2 gap-y-2 bg-white/10 px-4 py-3 rounded-xl text-sm sm:text-base">
-            <span>Plan</span>
-            <span className="text-right">Professional</span>
+        <div className="flex flex-col gap-3 mt-4">
+          <input
+            className="bg-white/10 p-2 rounded-md"
+            placeholder="Full Name"
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+          />
+          <input
+            className="bg-white/10 p-2 rounded-md"
+            placeholder="Email"
+            type="email"
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
+          <input
+            className="bg-white/10 p-2 rounded-md"
+            placeholder="Phone"
+            type="tel"
+            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+          />
 
-            <span>Amount</span>
-            <span className="text-right">₹5,999</span>
-
-            <hr className="col-span-2 border-white/20 my-1" />
-            <p className="col-span-2 text-white/70 text-sm">
-              Ideal for growing businesses
-            </p>
-          </div>
-
-          {/* Form */}
-          <form className="flex flex-col gap-3 mt-5">
-            <label className="text-sm">Full name</label>
-            <input
-              className="bg-white/10 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="John Dash"
-              type="text"
-            />
-
-            <label className="text-sm">Email Address</label>
-            <input
-              className="bg-white/10 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="johndash@gmail.com"
-              type="email"
-            />
-
-            <label className="text-sm">Phone Number</label>
-            <input
-              className="bg-white/10 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="93724 31234"
-              type="tel"
-            />
-
-            {/* Pay button */}
-            <button
-              type="submit"
-              className="mt-6 bg-blue-600 hover:bg-blue-700 transition p-3 rounded-full flex items-center justify-center gap-2 text-sm sm:text-base"
-            >
-              <DynamicIcon name="credit-card" size={18} />
-              <span>Pay ₹8,000</span>
-            </button>
-          </form>
+          <PayButton
+            amount={data.amount}
+            user={form}
+            disabled={!isValid || data.amount === 0}
+          />
         </div>
       </div>
     </div>
