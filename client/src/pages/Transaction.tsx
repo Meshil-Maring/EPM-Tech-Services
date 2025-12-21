@@ -15,12 +15,13 @@ const Transaction = () => {
       <div className="overflow-x-auto no-scrollbar">
         <div className="min-w-[900px] rounded-2xl overflow-hidden">
           {/* Table Head */}
-          <div className="grid grid-cols-7 bg-white/15 text-white/70 text-sm font-medium">
+          <div className="grid grid-cols-8 bg-white/15 text-white/70 text-sm font-medium">
             {[
               "Payment ID",
               "Order ID",
               "Date & Time",
               "Method",
+              "Plan",
               "Amount",
               "Status",
               "Action",
@@ -32,7 +33,7 @@ const Transaction = () => {
           </div>
 
           {/* Table Row */}
-          <div className="grid grid-cols-7 items-center bg-white/5 text-white hover:bg-white/10 transition">
+          <div className="grid grid-cols-8 items-center bg-white/5 text-white hover:bg-white/10 transition">
             <div className="px-4 py-4 font-mono text-sm">ds3431fdfa2</div>
 
             <div className="px-4 py-4 text-sm">23428342</div>
@@ -44,6 +45,8 @@ const Transaction = () => {
                 UPI
               </span>
             </div>
+
+            <div className="px-4 py-4 font-semibold">Professional</div>
 
             <div className="px-4 py-4 font-semibold">₹2,000</div>
 
