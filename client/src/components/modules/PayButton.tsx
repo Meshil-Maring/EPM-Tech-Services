@@ -1,6 +1,7 @@
-import { createOrder } from "../../api/payment.api.ts";
-import { loadRazorpay } from "../../utils/loadRazorpay.ts";
-import { server_url } from "../../utils/url.tsx";
+import { DynamicIcon } from "lucide-react/dynamic";
+import { createOrder } from "../../api/payment.api";
+import { loadRazorpay } from "../../utils/loadRazorpay";
+import { server_url } from "../../utils/url";
 
 declare global {
   interface Window {
@@ -8,10 +9,24 @@ declare global {
   }
 }
 
-const PayButton = () => {
+type PayButtonProps = {
+  amount: number;
+  user: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  disabled: boolean;
+};
+
+const PayButton = ({ amount, user, disabled }: PayButtonProps) => {
   const pay = async () => {
+    if (disabled) return;
+
     await loadRazorpay();
-    const order = await createOrder(500);
+
+    // ✅ use actual amount
+    const order = await createOrder(amount);
 
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -22,9 +37,12 @@ const PayButton = () => {
         await fetch(`${server_url}/api/payment/verify`, {
           method: "POST",
           headers: {
-            "Content-type": "application/json",
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(res),
+          body: JSON.stringify({
+            ...res,
+            user,
+          }),
         });
       },
     };
@@ -33,8 +51,19 @@ const PayButton = () => {
   };
 
   return (
-    <button className="bg-yellow-50/20 z-30" onClick={pay}>
-      Pay ₹500
+    <button
+      onClick={pay}
+      disabled={disabled}
+      type="button"
+      className={`mt-6 transition p-3 rounded-full flex items-center justify-center gap-2 text-sm sm:text-base w-full
+        ${
+          disabled
+            ? "bg-blue-600/50 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700"
+        }`}
+    >
+      <DynamicIcon name="credit-card" />
+      Pay ₹{amount}
     </button>
   );
 };

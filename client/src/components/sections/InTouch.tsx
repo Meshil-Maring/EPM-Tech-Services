@@ -1,10 +1,13 @@
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 
 const InTouch = forwardRef<HTMLDivElement>((_, ref) => {
-  // Form Hanlder
+  const [loading, setLoading] = useState(false);
+
+  // ================= FORM HANDLER =================
   const formHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (loading) return;
 
     const form = e.currentTarget;
 
@@ -19,13 +22,13 @@ const InTouch = forwardRef<HTMLDivElement>((_, ref) => {
       form.elements.namedItem("message") as HTMLTextAreaElement
     ).value.trim();
 
-    // ===== Validation =====
+    // ================= VALIDATION =================
     if (name.length < 2) {
       toast.error("Name must be at least 2 characters");
       return;
     }
 
-    if (!email || !email.includes("@")) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       toast.error("Please enter a valid email address");
       return;
     }
@@ -40,29 +43,47 @@ const InTouch = forwardRef<HTMLDivElement>((_, ref) => {
       return;
     }
 
-    await fetch("http://localhost:5000/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, type, message }),
-    });
+    const toastId = toast.loading("Sending your message...");
 
-    toast.success("Message sent successfully");
+    try {
+      setLoading(true);
 
-    form.reset();
+      const res = await fetch("http://localhost:5000/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, type, message }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to send message");
+      }
+
+      toast.success("Message sent! I’ll reply within 24–48 hours 🚀", {
+        id: toastId,
+      });
+
+      form.reset();
+    } catch (error) {
+      toast.error("Something went wrong. Please try again later ❌", {
+        id: toastId,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <section
       ref={ref}
-      className="relative pt-40 overflow-hidden bg-slate-950 p-4"
+      className="relative overflow-hidden bg-slate-950 p-4 pt-24"
     >
-      {/* Toast */}
+      {/* TOAST */}
       <Toaster position="bottom-center" />
 
-      {/* Heading */}
-      <h3 className="text-center text-4xl font-bold">
+      {/* HEADING */}
+      <h3 className="text-center text-4xl font-bold text-white">
         Get{" "}
         <span
           style={{
@@ -75,25 +96,24 @@ const InTouch = forwardRef<HTMLDivElement>((_, ref) => {
         </span>
       </h3>
 
-      <p className="text-center text-white/50">
-        Have a project in mind? Let&apos;s discuss how we can help bring your
-        vision to life.
+      <p className="mt-2 text-center text-white/50">
+        Have a project in mind? Let’s build something great together.
       </p>
 
-      {/* Background Gradient */}
+      {/* BACKGROUND */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.25),transparent_55%),radial-gradient(circle_at_bottom,rgba(129,140,248,0.25),transparent_55%)]" />
 
-      <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-4 py-16 md:flex-row md:items-center md:px-8 lg:py-20">
+      <div className="relative mx-auto flex max-w-6xl flex-col gap-12 px-4 py-16 md:flex-row md:items-center">
         {/* ================= LEFT ================= */}
         <div className="space-y-6 md:w-1/2">
-          <h2 className="text-3xl font-semibold tracking-tight text-slate-50 sm:text-4xl lg:text-5xl">
+          <h2 className="text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
             Let’s build your next{" "}
             <span className="bg-linear-to-r from-sky-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
               digital experience
             </span>
           </h2>
 
-          <p className="max-w-md text-sm text-slate-300/80 sm:text-base">
+          <p className="max-w-md text-slate-300/80">
             Tell me about your project, idea, or question. I usually reply
             within <span className="font-medium text-sky-300">24–48 hours</span>
             .
@@ -104,109 +124,85 @@ const InTouch = forwardRef<HTMLDivElement>((_, ref) => {
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900/80 ring-1 ring-slate-700/70">
                 📧
               </span>
-              <div>
-                <p className="text-xs uppercase tracking-wide text-slate-400">
-                  Email
-                </p>
-                <a
-                  href="mailto:dsmeshilmaring13@gmail.com"
-                  className="text-sm font-medium text-slate-50 hover:text-sky-300"
-                >
-                  dsmeshilmaring13@gmail.com
-                </a>
-              </div>
+              <a
+                href="mailto:dsmeshilmaring13@gmail.com"
+                className="font-medium text-white hover:text-sky-300"
+              >
+                dsmeshilmaring13@gmail.com
+              </a>
             </div>
 
             <div className="flex items-center gap-3">
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900/80 ring-1 ring-slate-700/70">
                 📍
               </span>
-              <div>
-                <p className="text-xs uppercase tracking-wide text-slate-400">
-                  Based in
-                </p>
-                <p className="text-sm font-medium text-slate-50">
-                  Imphal, India
-                </p>
-              </div>
+              <span className="font-medium text-white">Imphal, India</span>
             </div>
           </div>
         </div>
 
         {/* ================= RIGHT (FORM) ================= */}
         <div className="md:w-1/2">
-          <div className="rounded-2xl border border-slate-700/70 bg-slate-900/70 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.8)] backdrop-blur sm:p-6 lg:p-7">
-            <form className="space-y-4" onSubmit={formHandler}>
-              {/* Name + Email */}
+          <div className="rounded-2xl border border-slate-700/70 bg-slate-900/70 p-6 shadow-xl backdrop-blur">
+            <form onSubmit={formHandler} className="space-y-4">
+              {/* NAME + EMAIL */}
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-slate-300">
-                    Name
-                  </label>
-                  <input
-                    name="name"
-                    type="text"
-                    placeholder="Enter your name"
-                    className="w-full rounded-lg border border-slate-700/70 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-500/60"
-                  />
-                </div>
+                <input
+                  name="name"
+                  type="text"
+                  required
+                  placeholder="Your name"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-500/50"
+                />
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-slate-300">
-                    Email
-                  </label>
-                  <input
-                    name="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    className="w-full rounded-lg border border-slate-700/70 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-500/60"
-                  />
-                </div>
-              </div>
-
-              {/* Project Type */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300">
-                  Project type
-                </label>
-                <select
-                  name="type"
-                  className="w-full rounded-lg border border-slate-700/70 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-500/60"
-                >
-                  <option value="">Select an option</option>
-                  <option>Website design & development</option>
-                  <option>Web app / dashboard</option>
-                  <option>UI/UX design only</option>
-                  <option>Other / not sure</option>
-                </select>
-              </div>
-
-              {/* Message */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-300">
-                  Message
-                </label>
-                <textarea
-                  name="message"
-                  rows={4}
-                  placeholder="Share a short brief about your project..."
-                  className="min-h-20 w-full rounded-lg border border-slate-700/70 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-500/60"
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="you@example.com"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-500/50"
                 />
               </div>
 
-              {/* Submit */}
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <button
-                  type="submit"
-                  className="inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg bg-linear-to-r from-sky-500 via-indigo-500 to-purple-500 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-sky-500/25 transition hover:brightness-110 active:scale-[0.98]"
-                >
-                  Send message
-                </button>
+              {/* TYPE */}
+              <select
+                name="type"
+                required
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-500/50"
+              >
+                <option value="">Select project type</option>
+                <option>Website design & development</option>
+                <option>Web app / dashboard</option>
+                <option>UI/UX design only</option>
+                <option>Other / not sure</option>
+              </select>
 
-                <p className="text-[11px] text-slate-400">
-                  By sending this form you agree to be contacted back.
-                </p>
-              </div>
+              {/* MESSAGE */}
+              <textarea
+                name="message"
+                required
+                rows={4}
+                placeholder="Tell me about your project..."
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-500/50"
+              />
+
+              {/* SUBMIT */}
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full rounded-lg px-5 py-2.5 text-sm font-medium text-white transition
+                ${
+                  loading
+                    ? "cursor-not-allowed bg-slate-600"
+                    : "bg-linear-to-r from-sky-500 via-indigo-500 to-purple-500 hover:brightness-110 active:scale-[0.98]"
+                }`}
+              >
+                {loading ? "Sending..." : "Send message"}
+              </button>
+
+              <p className="text-center text-[11px] text-slate-400">
+                By submitting this form, you agree to be contacted back.
+              </p>
             </form>
           </div>
         </div>

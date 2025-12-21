@@ -67,6 +67,7 @@ const Signup = () => {
 
       const response = await fetch(`${server_url}/auth/sign-up`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userName, email, password }),
       });
@@ -78,9 +79,9 @@ const Signup = () => {
         return;
       }
 
-      toast.success("Account created successfully 🎉");
+      toast.success("Account created successfully");
       form.reset();
-      navigate("/auth/log-in");
+      navigate("/");
     } catch (err) {
       toast.error("Server error. Try again later.");
     } finally {
