@@ -1,6 +1,8 @@
 import { useState, forwardRef } from "react";
 import PricingCart from "../modules/PricingCart.tsx";
 import PaymentLayout from "../modules/PaymentLayout.tsx";
+import { useNavigate } from "react-router-dom";
+import { server_url } from "../../utils/url.tsx";
 
 // Pricing data
 const pricingPlans = [
@@ -54,7 +56,25 @@ const Pricing = forwardRef<HTMLDivElement>((_, ref) => {
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(0);
 
-  const openOverlay = (index: number) => {
+  const navigate = useNavigate();
+
+  const isAuth = async () => {
+    try {
+      const res = await fetch(`${server_url}/api/check-auth`, {
+        credentials: "include",
+      });
+
+      return res.ok;
+    } catch (err) {
+      console.error("Auth check failed", err);
+      return false;
+    }
+  };
+
+  const openOverlay = async (index: number) => {
+    const authenticated = await isAuth();
+    if (!authenticated) return navigate("/auth/log-in");
+
     setSelectedPlan(index);
     setOverlayOpen(true);
   };

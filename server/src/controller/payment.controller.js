@@ -16,6 +16,7 @@ export const createOrder = async (req, res) => {
       orderId: order.id,
       name: req.user?.name || "Guest",
       phoneNumber: req.user?.phone || null,
+      email: "",
       date: new Date(),
       method: null,
       plan,

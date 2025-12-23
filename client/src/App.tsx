@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Transaction from "./pages/Transaction";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
   return (
@@ -10,7 +11,15 @@ function App() {
       <Route path="/" element={<Home />}></Route>
       <Route path="/auth/sign-up" element={<Signup />}></Route>
       <Route path="/auth/log-in" element={<Login />}></Route>
-      <Route path="/transaction" element={<Transaction />}></Route>
+
+      <Route
+        path="/transaction"
+        element={
+          <ProtectedRoute>
+            <Transaction />
+          </ProtectedRoute>
+        }
+      ></Route>
     </Routes>
   );
 }

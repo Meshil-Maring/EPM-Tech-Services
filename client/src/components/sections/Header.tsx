@@ -22,11 +22,11 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
   // use Effect
   useEffect(() => {
     const auth = async () => {
-      const res = await fetch(`${server_url}/home`, {
+      const res = await fetch(`${server_url}/api/check-auth`, {
         credentials: "include",
       });
 
-      if (res.status == 443) setIsAuth(true);
+      if (res.status == 200) setIsAuth(true);
     };
 
     auth();
@@ -135,9 +135,11 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
               ))}
             </ul>
 
-            <ul className="text-xl">
-              <Link to={"/transaction"}>Transaction</Link>
-            </ul>
+            {isAuth && (
+              <ul className="text-xl">
+                <Link to={"/transaction"}>Transaction</Link>
+              </ul>
+            )}
 
             <button
               onClick={isAuth ? logOutHandler : sigupHandler}

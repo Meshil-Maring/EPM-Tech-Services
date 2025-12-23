@@ -12,13 +12,11 @@ const Transaction = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto no-scrollbar">
-        <div className="min-w-[900px] rounded-2xl overflow-hidden">
+      <div className="overflow-x-auto no-scrollbar scroll-smooth">
+        <div className="min-w-[600px] sm:min-w-[600px] rounded-2xl overflow-hidden gap-2">
           {/* Table Head */}
-          <div className="grid grid-cols-8 bg-white/15 text-white/70 text-sm font-medium">
+          <div className="grid grid-cols-6 bg-white/15 text-white/70 text-sm font-medium">
             {[
-              "Payment ID",
-              "Order ID",
               "Date & Time",
               "Method",
               "Plan",
@@ -26,39 +24,47 @@ const Transaction = () => {
               "Status",
               "Action",
             ].map((item, key) => (
-              <div key={key} className="px-4 py-3">
+              <div key={key} className="px-2 py-2 sm:px-4 sm:py-3">
                 {item}
               </div>
             ))}
           </div>
 
           {/* Table Row */}
-          <div className="grid grid-cols-8 items-center bg-white/5 text-white hover:bg-white/10 transition">
-            <div className="px-4 py-4 font-mono text-sm">ds3431fdfa2</div>
+          <div className="grid grid-cols-6 gap-2 items-center bg-white/5 text-white hover:bg-white/10 transition">
+            {/* Date */}
+            <div className="px-2 py-2 sm:px-4 sm:py-4 text-sm">
+              01 Mar 2024 • 10:45 AM
+            </div>
 
-            <div className="px-4 py-4 text-sm">23428342</div>
-
-            <div className="px-4 py-4 text-sm">01 Mar 2024 • 10:45 AM</div>
-
-            <div className="px-4 py-4">
-              <span className="px-3 py-1 rounded-full text-xs bg-blue-500/20 text-blue-400">
+            {/* Method */}
+            <div className="px-2 py-2 sm:px-4 sm:py-4">
+              <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs bg-blue-500/20 text-blue-400">
                 UPI
               </span>
             </div>
 
-            <div className="px-4 py-4 font-semibold">Professional</div>
+            {/* Plan */}
+            <div className="px-2 py-2 sm:px-4 sm:py-4 font-semibold">
+              Professional
+            </div>
 
-            <div className="px-4 py-4 font-semibold">₹2,000</div>
+            {/* Amount */}
+            <div className="px-2 py-2 sm:px-4 sm:py-4 font-semibold">
+              ₹2,000
+            </div>
 
-            <div className="px-4 py-4">
-              <span className="px-3 py-1 rounded-full text-xs bg-green-500/20 text-green-400">
+            {/* Status */}
+            <div className="px-2 py-2 sm:px-4 sm:py-4">
+              <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs bg-green-500/20 text-green-400">
                 Success
               </span>
             </div>
 
-            <div className="px-4 py-4 flex gap-2 cursor-pointer items-center">
-              <button className="text-sm text-blue-400 ">View</button>
-              <DynamicIcon name="eye" size={20} color="#60A5FA" />
+            {/* Action */}
+            <div className="px-2 py-2 sm:px-4 sm:py-4 flex sm:gap-2 items-center cursor-pointer gap-2 ">
+              <button className="text-sm text-blue-400">View</button>
+              <DynamicIcon name="eye" size={18} color="#60A5FA" />
             </div>
           </div>
         </div>
