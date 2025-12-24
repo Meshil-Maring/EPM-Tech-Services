@@ -1,25 +1,32 @@
 import razorpay from "../config/razorpay.config.js";
-import { createTransaction } from "../module/transaction.module.js";
+import verifySignature from "../utils/verify-signature.js";
+import {
+  createTransaction,
+  updateTransaction,
+} from "../module/transaction.module.js";
 
 export const createOrder = async (req, res) => {
   try {
-    const { amount, plan } = req.body;
+    const { data } = req.body;
 
-    // create order
+    // Razor pay order
+    const amountInPaise = Number(data.amount) * 100;
+
     const order = await razorpay.orders.create({
-      amount: amount * 100,
+      amount: amountInPaise,
       currency: "INR",
     });
 
     // save PENDING transaction immediately
     await createTransaction({
       orderId: order.id,
-      name: req.user?.name || "Guest",
-      phoneNumber: req.user?.phone || null,
+      userId: data.userId,
+      name: data.name || "Guest",
+      phoneNumber: data.phone || null,
+      email: data.email,
       date: new Date(),
-      method: null,
-      plan,
-      amount,
+      plan: data.plan,
+      amount: data.amount,
       status: "PENDING",
     });
 
@@ -30,10 +37,29 @@ export const createOrder = async (req, res) => {
   }
 };
 
-export const verifyPayment = (req, res) => {
-  const isValid = verifySignature(req.body);
+export const verifyPayment = async (req, res) => {
+  try {
+    const isValid = verifySignature(req.body);
 
-  if (!isValid) return res.status(400).json({ error: "Invalid payment" });
+    if (!isValid) {
+      await updateTransaction({
+        orderId: req.body.razorpay_order_id,
+        status: "FAILED",
+      });
 
-  res.json({ success: true });
+      return res.status(400).json({ message: "Invalid payment" });
+    }
+
+    // Payment success
+    await updateTransaction({
+      orderId: req.body.razorpay_order_id,
+      paymentId: req.body.razorpay_payment_id,
+      status: "SUCCESS",
+    });
+
+    res.json({ message: "Payment verified successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Payment verification failed" });
+  }
 };

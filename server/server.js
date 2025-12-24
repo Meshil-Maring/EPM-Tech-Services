@@ -39,14 +39,13 @@ app.use(session(sessionConfig));
 app.use("/auth", usersRoute);
 
 // Protected route
-app.get("/home", isAuth, (req, res) => {
-  res.status(443).json({ userid: req.session.userId });
+app.get("/api/check-auth", isAuth, (req, res) => {
+  res.status(200).json({ userid: req.session.userId });
 });
 
 // Public route
 app.post("/send", intouchSendEmail);
 
-//
 app.use("/api/payment", paymentRoutes);
 
 app.listen(PORT, () => console.log("Server running on", PORT));

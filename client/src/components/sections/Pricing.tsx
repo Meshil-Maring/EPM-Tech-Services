@@ -1,6 +1,8 @@
 import { useState, forwardRef } from "react";
 import PricingCart from "../modules/PricingCart.tsx";
 import PaymentLayout from "../modules/PaymentLayout.tsx";
+import { useNavigate } from "react-router-dom";
+import { server_url } from "../../utils/url.tsx";
 
 // Pricing data
 const pricingPlans = [
@@ -53,8 +55,34 @@ const pricingPlans = [
 const Pricing = forwardRef<HTMLDivElement>((_, ref) => {
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(0);
+  const [userId, setUserId] = useState<string>("");
 
-  const openOverlay = (index: number) => {
+  // Navigate to other routes
+  const navigate = useNavigate();
+
+  // Checking user is authenticate or not
+  const isAuth = async () => {
+    try {
+      const res = await fetch(`${server_url}/api/check-auth`, {
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        setUserId(result.userid);
+      }
+
+      return res.ok;
+    } catch (err) {
+      console.error("Auth check failed", err);
+      return false;
+    }
+  };
+
+  const openOverlay = async (index: number) => {
+    const authenticated = await isAuth();
+    if (!authenticated) return navigate("/auth/log-in");
+
     setSelectedPlan(index);
     setOverlayOpen(true);
   };
@@ -77,8 +105,10 @@ const Pricing = forwardRef<HTMLDivElement>((_, ref) => {
 
       {overlayOpen && (
         <PaymentLayout
+          // userId =
           onClose={closeOverlay}
           data={pricingPlans[selectedPlan]}
+          userId={userId}
         />
       )}
     </div>

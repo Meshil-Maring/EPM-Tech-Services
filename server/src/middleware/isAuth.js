@@ -1,6 +1,10 @@
 export const isAuth = async (req, res, next) => {
-  if (!req.session.userId)
-    return res.status(401).json({ error: "Not authenticated!" });
+  const userId = await req.session.userId;
+
+  if (!userId)
+    return res
+      .status(401)
+      .json({ authenticated: false, error: "Not authenticated!" });
 
   next();
 };
