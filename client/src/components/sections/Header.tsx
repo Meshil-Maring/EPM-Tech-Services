@@ -30,7 +30,7 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
     };
 
     auth();
-  }, []);
+  }, [isAuth]);
 
   const navItems = [
     { label: "Home", action: onHome },
@@ -137,7 +137,7 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
 
             {isAuth && (
               <ul className="text-xl">
-                <Link to={"/transaction"}>Transaction</Link>
+                <Link to={"/get-transaction"}>Transaction</Link>
               </ul>
             )}
 

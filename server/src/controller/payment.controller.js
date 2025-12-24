@@ -6,8 +6,6 @@ export const createOrder = async (req, res) => {
   try {
     const { data } = req.body;
 
-    console.log(data.amount);
-
     // Razor pay order
     const amountInPaise = Number(data.amount) * 100;
 
