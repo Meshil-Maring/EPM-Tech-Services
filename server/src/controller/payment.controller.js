@@ -1,6 +1,9 @@
 import razorpay from "../config/razorpay.config.js";
-import { createTransaction } from "../module/transaction.module.js";
 import verifySignature from "../utils/verify-signature.js";
+import {
+  createTransaction,
+  updateTransaction,
+} from "../module/transaction.module.js";
 
 export const createOrder = async (req, res) => {
   try {
@@ -22,7 +25,6 @@ export const createOrder = async (req, res) => {
       phoneNumber: data.phone || null,
       email: data.email,
       date: new Date(),
-      method: null,
       plan: data.plan,
       amount: data.amount,
       status: "PENDING",
@@ -35,10 +37,29 @@ export const createOrder = async (req, res) => {
   }
 };
 
-export const verifyPayment = (req, res) => {
-  const isValid = verifySignature(req.body);
+export const verifyPayment = async (req, res) => {
+  try {
+    const isValid = verifySignature(req.body);
 
-  if (!isValid) return res.status(400).json({ error: "Invalid payment" });
+    if (!isValid) {
+      await updateTransaction({
+        orderId: req.body.razorpay_order_id,
+        status: "FAILED",
+      });
 
-  res.json({ success: true });
+      return res.status(400).json({ message: "Invalid payment" });
+    }
+
+    // Payment success
+    await updateTransaction({
+      orderId: req.body.razorpay_order_id,
+      paymentId: req.body.razorpay_payment_id,
+      status: "SUCCESS",
+    });
+
+    res.json({ message: "Payment verified successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Payment verification failed" });
+  }
 };
