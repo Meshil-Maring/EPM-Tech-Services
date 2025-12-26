@@ -1,6 +1,6 @@
 import { forwardRef, useMemo } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 const CODE_ITEMS = [
   "<div>",
