@@ -1,14 +1,15 @@
 import { motion } from "framer-motion";
 import { DynamicIcon } from "lucide-react/dynamic";
+import { Link } from "react-router-dom";
 
 import Logo from "../../assets/EPM_logo.png";
 import WhatsAppsIcons from "../../assets/icons/WhatsAppIcon";
 
 const footerData = [
-  ["Company", "About Us", "Careers", "Blog", "Press Kit"],
+  ["Company", "About Us", "Service FAQs"],
   ["Servies", "Web", "Development", "UI/UX Design", "Consulting"],
-  ["Resources", "Documentation", "Tutorials", "Support", "Contact"],
-  ["Legal", "Terms of Service", "Cookie Policy", "Licenses"],
+  ["Resources", "Documentation", "Support"],
+  ["Legal", "Terms and Service", "Cookie Policy", "Privacy Policy"],
 ];
 
 const Footer = () => {
@@ -113,12 +114,13 @@ const Footer = () => {
             <h3 className="font-semibold">{value[0]}</h3>
             <ul className="flex flex-col gap-1">
               {value.slice(1).map((list) => (
-                <li
+                <Link
+                  to={`/${list.toLowerCase().replace(/\s+/g, "-")}`}
                   key={list}
                   className="text-white/60 text-sm cursor-pointer  hover:text-white transition-colors duration-300"
                 >
                   {list}
-                </li>
+                </Link>
               ))}
             </ul>
           </div>

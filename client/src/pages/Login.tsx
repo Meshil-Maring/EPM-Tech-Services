@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { DynamicIcon } from "lucide-react/dynamic";
+import { server_url } from "../utils/url";
 
 type Errors = {
   email?: string;
@@ -62,7 +63,7 @@ const Login = () => {
     try {
       setLoading(true);
 
-      const response = await fetch("http://localhost:5000/auth/log-in", {
+      const response = await fetch(`${server_url}/auth/log-in`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -91,15 +92,15 @@ const Login = () => {
     <section className="flex justify-center items-center h-screen">
       <form
         onSubmit={formHandler}
-        className="flex flex-col p-8 bg-white w-[450px] text-black rounded-2xl gap-4 shadow-2xl"
+        className="flex flex-col p-8 bg-black/20 text-white w-[450px] border border-white/20 rounded-2xl gap-4 shadow-2xl"
       >
-        <Link className="bg-blue-500/20 w-fit p-2 rounded-full" to="/">
+        <Link className="bg-blue-500/20 w-fit p-2 rounded-full absolute" to="/">
           <DynamicIcon name="arrow-left" />
         </Link>
 
         <div>
-          <h1 className="text-2xl font-bold text-center">Log In</h1>
-          <p className="text-center text-black/80">
+          <h1 className="text-2xl font-bold text-center mt-8">Log In</h1>
+          <p className="text-center text-white/80">
             Log in to continue to your account
           </p>
         </div>
@@ -112,7 +113,7 @@ const Login = () => {
             name="email"
             type="email"
             required
-            className="border px-2 py-1"
+            className="border px-2 rounded-sm py-1"
           />
           {errors.email && (
             <span className="text-red-600 text-sm">{errors.email}</span>
@@ -130,7 +131,7 @@ const Login = () => {
               name="password"
               required
               minLength={6}
-              className="border px-2 py-1 w-full"
+              className="border px-2 rounded-sm py-1 w-full"
             />
 
             <button
@@ -144,6 +145,8 @@ const Login = () => {
                 size={20}
               />
             </button>
+
+            <button className="w-full text-right mt-2">Forget Password</button>
           </div>
 
           {errors.password && (
@@ -154,7 +157,7 @@ const Login = () => {
         {/* Submit */}
         <button
           disabled={loading}
-          className={`mt-4 flex items-center justify-center gap-2 rounded p-2 text-white transition
+          className={`mt-10 flex items-center justify-center gap-2 rounded p-2 text-white transition
             ${
               loading
                 ? "bg-blue-400 cursor-not-allowed"

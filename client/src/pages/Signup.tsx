@@ -93,15 +93,17 @@ const Signup = () => {
     <section className="flex justify-center items-center h-screen">
       <form
         onSubmit={formHandler}
-        className="flex flex-col p-8 bg-white w-[450px] text-black rounded-2xl gap-4 shadow-2xl"
+        className="flex flex-col p-8 bg-black/20 text-white border border-white/20 w-[450px] rounded-2xl gap-4 shadow-2xl"
       >
-        <Link className="bg-blue-500/20 w-fit p-2 rounded-full" to="/">
+        <Link className="bg-blue-500/20 w-fit p-2 rounded-full absolute" to="/">
           <DynamicIcon name="arrow-left" />
         </Link>
 
         <div>
-          <h1 className="text-2xl font-bold text-center">Create Account</h1>
-          <p className="text-center text-black/70 text-sm">
+          <h1 className="text-2xl font-bold text-center mt-8">
+            Create Account
+          </h1>
+          <p className="text-center text-white/70 text-sm">
             Sign up to access all features
           </p>
         </div>
@@ -113,7 +115,7 @@ const Signup = () => {
             ref={userNameRef}
             name="userName"
             disabled={loading}
-            className="border px-2 py-1 w-full"
+            className="border px-2 rounded-sm mt-1 py-1 w-full"
           />
           {errors.name && <p className="text-red-600 text-sm">{errors.name}</p>}
         </div>
@@ -127,7 +129,7 @@ const Signup = () => {
             type="email"
             autoComplete="email"
             disabled={loading}
-            className="border px-2 py-1 w-full"
+            className="border px-2 rounded-sm mt-1 py-1 w-full"
           />
           {errors.email && (
             <p className="text-red-600 text-sm">{errors.email}</p>
@@ -144,7 +146,7 @@ const Signup = () => {
               name="password"
               autoComplete="new-password"
               disabled={loading}
-              className="border px-2 py-1 w-full"
+              className="border px-2 rounded-sm mt-1 py-1 w-full"
             />
             <button
               type="button"
@@ -170,7 +172,7 @@ const Signup = () => {
             type={showPassword ? "text" : "password"}
             name="confirmPassword"
             disabled={loading}
-            className="border px-2 py-1 w-full"
+            className="border px-2 rounded-sm mt-1 py-1 w-full"
           />
           {errors.confirmPassword && (
             <p className="text-red-600 text-sm">{errors.confirmPassword}</p>

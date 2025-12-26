@@ -119,12 +119,7 @@ const Hero = forwardRef<HTMLDivElement>((_, ref) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4"
-        >
-          <button className="group px-8 py-4 rounded-full bg-linear-to-r from-[#6C48FF] to-[#00D4FF] text-white flex items-center gap-2">
-            Get Quote
-            <ArrowRight className="w-5 h-5" />
-          </button>
-        </motion.div>
+        ></motion.div>
 
         {/* ===== STATS (UNCHANGED) ===== */}
         <motion.div

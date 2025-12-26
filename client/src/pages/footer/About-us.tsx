@@ -1,0 +1,111 @@
+const AboutUs = () => {
+  return (
+    <section className="relative px-6 py-20 bg-black text-white">
+      {/* Background Glow */}
+      <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 via-purple-500/5 to-transparent blur-3xl" />
+
+      <div className="relative max-w-6xl mx-auto space-y-16">
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
+            About <span className="text-blue-500">EPM Tech Services</span>
+          </h1>
+          <p className="text-white/70 max-w-3xl mx-auto text-lg">
+            Technology-driven solutions built to scale, perform, and grow with
+            your business.
+          </p>
+        </div>
+
+        {/* Intro */}
+        <div className="grid md:grid-cols-2 gap-10">
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold">Who We Are</h2>
+            <p className="text-white/70 leading-relaxed">
+              EPM Tech Services is a technology-driven company focused on
+              building smart, reliable, and scalable digital solutions for
+              businesses of all sizes.
+            </p>
+            <p className="text-white/70 leading-relaxed">
+              We help startups, small businesses, and growing companies turn
+              their ideas into powerful digital products — from modern websites
+              to full-stack applications.
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 space-y-4">
+            <h3 className="text-xl font-semibold">What We Do</h3>
+            <ul className="space-y-2 text-white/70">
+              <li>• Website Design & Development</li>
+              <li>• Web & Software Applications</li>
+              <li>• Custom Business Solutions</li>
+              <li>• Maintenance, Support & Optimization</li>
+              <li>• IT Consulting & Technical Guidance</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Mission */}
+        <div className="rounded-3xl bg-linear-to-br from-white/10 to-white/5 border border-white/10 p-10 text-center">
+          <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
+          <p className="text-white/70 max-w-3xl mx-auto leading-relaxed">
+            Our mission is to empower businesses through technology by
+            delivering high-quality, affordable, and future-ready solutions. We
+            believe good software should be easy to use, reliable, secure, and
+            scalable for future growth.
+          </p>
+        </div>
+
+        {/* Why Choose Us */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            "Client-first approach",
+            "Clean & efficient code",
+            "Transparent communication",
+            "On-time delivery",
+            "Long-term support",
+          ].map((item, index) => (
+            <div
+              key={index}
+              className="rounded-2xl border border-white/10 bg-white/5 p-6 hover:bg-white/10 transition"
+            >
+              <p className="font-medium">{item}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Values */}
+        <div className="grid md:grid-cols-4 gap-6">
+          {[
+            { title: "Integrity", desc: "Honest work & clear communication" },
+            { title: "Quality", desc: "No shortcuts, only solid solutions" },
+            { title: "Innovation", desc: "Always improving & evolving" },
+            { title: "Trust", desc: "Partnerships over quick wins" },
+          ].map((value, index) => (
+            <div
+              key={index}
+              className="rounded-2xl bg-white/5 border border-white/10 p-6 text-center"
+            >
+              <h4 className="font-semibold text-lg">{value.title}</h4>
+              <p className="text-white/70 text-sm mt-2">{value.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA
+        <div className="text-center space-y-6">
+          <h2 className="text-3xl font-semibold">Let’s Build Together</h2>
+          <p className="text-white/70 max-w-2xl mx-auto">
+            We don’t just deliver projects — we build partnerships. If you have
+            an idea, a problem to solve, or a business to grow, we’re here to
+            help.
+          </p>
+          <button className="px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-500 transition font-medium">
+            Contact Us
+          </button>
+        </div> */}
+      </div>
+    </section>
+  );
+};
+
+export default AboutUs;
