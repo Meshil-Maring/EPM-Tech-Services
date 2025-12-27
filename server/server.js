@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
+import { initDB } from "./src/config/init.js";
 import { isAuth } from "./src/middleware/isAuth.js";
 import usersRoute from "./src/routes/users.js";
 import { intouchSendEmail } from "./src/controller/intouch-send-email.js";
@@ -67,6 +68,8 @@ app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: "Internal Server Error" });
 });
+
+await initDB();
 
 app.listen(PORT, () => {
   console.log("Server running on port", PORT);
