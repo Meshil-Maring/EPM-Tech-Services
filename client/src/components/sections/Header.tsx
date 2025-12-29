@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { DynamicIcon } from "lucide-react/dynamic";
 
 import { server_url } from "../../utils/url";
-import { DynamicIcon } from "lucide-react/dynamic";
 import Logo from "../../assets/logo.png";
 
 interface HeaderProps {
@@ -17,20 +16,29 @@ interface HeaderProps {
 
 const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
   const [openNav, setOpenNav] = useState(false);
-  const [isAuth, setIsAuth] = useState<boolean>(false);
+  const [isAuth, setIsAuth] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
-  // use Effect
+  const navigate = useNavigate();
+
+  // ✅ CHECK AUTH ONLY ONCE
   useEffect(() => {
-    const auth = async () => {
-      const res = await fetch(`${server_url}/api/check-auth`, {
-        credentials: "include",
-      });
+    const checkAuth = async () => {
+      try {
+        const res = await fetch(`${server_url}/api/check-auth`, {
+          credentials: "include",
+        });
 
-      if (res.status == 200) setIsAuth(true);
+        setIsAuth(res.status === 200);
+      } catch {
+        setIsAuth(false);
+      } finally {
+        setAuthChecked(true);
+      }
     };
 
-    auth();
-  }, [isAuth]);
+    checkAuth();
+  }, []);
 
   const navItems = [
     { label: "Home", action: onHome },
@@ -39,37 +47,35 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
     { label: "Contact", action: onContact },
   ];
 
-  // Routes
-  const navigate = useNavigate();
-
   const handleClick = (action: () => void) => {
     action();
     setOpenNav(false);
   };
 
-  // Sign up handler
-  const sigupHandler = () => {
+  const signupHandler = () => {
     navigate("/auth/sign-up");
   };
 
-  // Log out handler
-  const logOutHandler = async () => {
-    const res = await fetch(`${server_url}/auth/log-out`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
+  const logoutHandler = async () => {
+    try {
+      const res = await fetch(`${server_url}/auth/log-out`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    if (res.status == 200) {
-      const data = await res.json();
-      toast.success(data.message);
+      if (res.status === 200) {
+        const data = await res.json();
+        toast.success(data.message);
+      }
+    } catch {
+      toast.error("Logout failed");
+    } finally {
+      setIsAuth(false);
+      navigate("/");
     }
-
-    setIsAuth(false);
-
-    navigate("/");
   };
 
   return (
@@ -77,9 +83,9 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
       {/* Logo */}
       <div className="flex gap-3 items-center">
         <img src={Logo} className="w-10" />
-        <p className="text-white font-semibold hidden sm:block">
-          EPM Tech Services
-        </p>
+        <h1 className="text-white font-semibold hidden sm:block">
+          EPM Tech Service
+        </h1>
       </div>
 
       {/* Desktop Menu */}
@@ -94,13 +100,18 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
           </li>
         ))}
 
-        {isAuth && <Link to={"/transaction"}>Transaction</Link>}
+        {/* ✅ SHOW ONLY AFTER AUTH CHECK */}
+        {authChecked && isAuth && (
+          <Link to="/transaction" className="hover:text-blue-400">
+            Transaction
+          </Link>
+        )}
 
         <button
-          onClick={isAuth ? logOutHandler : sigupHandler}
-          className={` ${
+          onClick={isAuth ? logoutHandler : signupHandler}
+          className={`${
             isAuth ? "bg-red-700" : "bg-blue-500"
-          } py-2 p-4 rounded-full`}
+          } py-2 px-4 rounded-full`}
         >
           {isAuth ? "Log out" : "Sign up"}
         </button>
@@ -121,31 +132,35 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute flex flex-col gap-8 top-16 left-0 w-full bg-black px-8 py-10 justify-center items-center"
+            className="absolute top-16 left-0 w-full bg-black px-8 py-10 flex flex-col items-center gap-8"
           >
             <ul className="flex flex-col items-center space-y-5">
               {navItems.map((item, i) => (
                 <li
                   key={i}
                   onClick={() => handleClick(item.action)}
-                  className="text-xl text-center w-full text-white cursor-pointer"
+                  className="text-xl text-white cursor-pointer"
                 >
                   {item.label}
                 </li>
               ))}
             </ul>
 
-            {isAuth && (
-              <ul className="text-xl">
-                <Link to={"/get-transaction"}>Transaction</Link>
-              </ul>
+            {authChecked && isAuth && (
+              <Link
+                to="/transaction"
+                className="text-xl text-white"
+                onClick={() => setOpenNav(false)}
+              >
+                Transaction
+              </Link>
             )}
 
             <button
-              onClick={isAuth ? logOutHandler : sigupHandler}
-              className={` ${
+              onClick={isAuth ? logoutHandler : signupHandler}
+              className={`${
                 isAuth ? "bg-red-700" : "bg-blue-500"
-              } p-3 w-48 rounded-full `}
+              } p-3 w-48 rounded-full`}
             >
               {isAuth ? "Log out" : "Sign up"}
             </button>
