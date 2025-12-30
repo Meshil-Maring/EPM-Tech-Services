@@ -6,7 +6,6 @@ import { server_url } from "../utils/url";
 
 type Errors = {
   email?: string;
-  password?: string;
 };
 
 // Spinner component
@@ -14,19 +13,16 @@ const Spinner = () => (
   <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
 );
 
-const Login = () => {
+const FogotPassword = () => {
   const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
 
   const [errors, setErrors] = useState<Errors>({});
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   // Regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
 
   const formHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,7 +30,6 @@ const Login = () => {
 
     const form = e.currentTarget;
     const email = form.email.value.trim();
-    const password = form.password.value.trim();
 
     const newErrors: Errors = {};
 
@@ -43,19 +38,11 @@ const Login = () => {
       newErrors.email = "Enter a valid email address";
     }
 
-    if (!passwordRegex.test(password)) {
-      newErrors.password = "Must include 1 uppercase & 1 number (6+)";
-    }
-
     setErrors(newErrors);
 
     // Focus first error
     if (newErrors.email) {
       emailRef.current?.focus();
-      return;
-    }
-    if (newErrors.password) {
-      passwordRef.current?.focus();
       return;
     }
 
@@ -67,7 +54,7 @@ const Login = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email }),
       });
 
       const data = await response.json();
@@ -99,9 +86,18 @@ const Login = () => {
         </Link>
 
         <div>
-          <h1 className="text-2xl font-bold text-center mt-8">Log In</h1>
+          <h2 className="text-2xl font-bold text-center mt-8">
+            Forgot Password
+          </h2>
           <p className="text-center text-white/80">
-            Log in to continue to your account
+            Enter your email to receive a reset link
+          </p>
+        </div>
+
+        <div>
+          <p className="text-white/80 border p-2 px-4 rounded-xl border-white/20 bg-white/5">
+            Enter the email address associated with your account and we'll send
+            you a link to reset your password.
           </p>
         </div>
 
@@ -120,46 +116,6 @@ const Login = () => {
           )}
         </div>
 
-        {/* Password */}
-        <div className="flex flex-col gap-1">
-          <label>Password</label>
-
-          <div className="relative">
-            <input
-              ref={passwordRef}
-              type={showPassword ? "text" : "password"}
-              name="password"
-              required
-              minLength={6}
-              className="border px-2 rounded-sm py-1 w-full"
-            />
-
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-2 top-2"
-              aria-label="Toggle password visibility"
-            >
-              <DynamicIcon
-                name={showPassword ? "eye-closed" : "eye"}
-                size={20}
-              />
-            </button>
-
-            {/* Forget password */}
-            <Link
-              to={"/forgot-password"}
-              className="w-full text-right mt-2 text-white/50 hover:text-white/80 cursor-pointer"
-            >
-              Forgot Password
-            </Link>
-          </div>
-
-          {errors.password && (
-            <span className="text-red-600 text-sm">{errors.password}</span>
-          )}
-        </div>
-
         {/* Submit */}
         <button
           disabled={loading}
@@ -174,17 +130,17 @@ const Login = () => {
           {loading ? (
             <>
               <Spinner />
-              <span>Logging in...</span>
+              <span>Send OTP</span>
             </>
           ) : (
-            "Log in"
+            "Send OTP"
           )}
         </button>
 
         <p className="text-center text-sm">
-          Don&apos;t have an account?{" "}
+          Remember your password?{" "}
           <Link to="/auth/sign-up" className="text-blue-500 underline">
-            Sign up
+            Log In
           </Link>
         </p>
       </form>
@@ -194,4 +150,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default FogotPassword;

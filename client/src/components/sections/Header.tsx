@@ -21,7 +21,7 @@ const Header = ({ onHome, onServices, onPricing, onContact }: HeaderProps) => {
 
   const navigate = useNavigate();
 
-  // ✅ CHECK AUTH ONLY ONCE
+  // CHECK AUTH ONLY ONCE
   useEffect(() => {
     const checkAuth = async () => {
       try {

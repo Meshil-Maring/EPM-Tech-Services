@@ -8,6 +8,7 @@ const Home = lazy(() => import("./pages/Home"));
 const Signup = lazy(() => import("./pages/Signup"));
 const Login = lazy(() => import("./pages/Login"));
 const Transaction = lazy(() => import("./pages/Transaction"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 
 // Footer pages
 const AboutUs = lazy(() => import("./pages/footer/About-us"));
@@ -39,6 +40,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/auth/sign-up" element={<Signup />} />
         <Route path="/auth/log-in" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         <Route
           path="/transaction"

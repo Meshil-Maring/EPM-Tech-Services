@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+body {
+  font-family: "Arail";
+}
+
 :root {
   --gradient: linear-gradient(to right, blue, rgb(157, 157, 255));
 }
